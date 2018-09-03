@@ -17,9 +17,9 @@ import java.util.Map;
  **/
 public class FreemarkerDemo {
 
-     private static final String TEMPLATE_PATH = "F:\\develop\\idea-workspace\\generator-code\\src\\main\\java\\com\\kabasiji\\generator\\templates";
-     //private static final String TEMPLATE_PATH = "com/kabasiji/generator/templates";
+     private static final String TEMPLATE_PATH = "com/kabasiji/generator/templates";
      private static final String CLASS_PATH = "D://test";
+     private static final String SRC_Folder = "src/main/java";
      //private static final String CLASS_PATH = "com/kabasiji/generator/demo";
 
      public static void main(String[] args) {
@@ -28,7 +28,8 @@ public class FreemarkerDemo {
           Writer out = null;
           try {
                // step2 获取模版路径
-               configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
+               String rootJavaPath = new StringBuffer(System.getProperty("user.dir")).append("/").append(SRC_Folder).append("/").toString();
+               configuration.setDirectoryForTemplateLoading(new File(rootJavaPath + TEMPLATE_PATH));
                // step3 创建数据模型
                Map<String, Object> dataMap = new HashMap<String, Object>();
                dataMap.put("classPath", "com.freemark.hello");
