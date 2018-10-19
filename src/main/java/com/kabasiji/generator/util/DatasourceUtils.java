@@ -346,9 +346,11 @@ public class DatasourceUtils {
           } else if (sqlType.equalsIgnoreCase("smallint")) {
                return "short";
           } else if (sqlType.equalsIgnoreCase("int")) {
-               return "int";
+               return "Integer";
+               //return "int";
           } else if (sqlType.equalsIgnoreCase("bigint")) {
-               return "long";
+               return "Long";
+               //return "long";
           } else if (sqlType.equalsIgnoreCase("float")) {
                return "float";
           } else if (sqlType.equalsIgnoreCase("decimal") || sqlType.equalsIgnoreCase("numeric")
