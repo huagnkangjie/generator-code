@@ -233,7 +233,7 @@ public class DatasourceUtils {
                     "@Table(name = \""+ this.param.getTableName() +"\")\r\n" +
                     "@JsonInclude(JsonInclude.Include.NON_NULL)\r\n" +
                     "@JsonIgnoreProperties(ignoreUnknown = true)\r\n");
-          sb.append("public class " + initcap(fileName(this.param.getTableName())) + "{\r\n");
+          sb.append("public class " + initcap(fileName(this.param.getTableName())) + " {\r\n");
           //属性
           processAllAttrs(sb);
           //get set方法
