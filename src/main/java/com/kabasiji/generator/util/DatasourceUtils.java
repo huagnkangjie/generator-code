@@ -199,6 +199,18 @@ public class DatasourceUtils {
           StringBuffer sb = new StringBuffer();
           sb.append("package " + this.param.getModelPackagePath() + ";\r\n");
 
+          sb.append("import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\r\n" +
+                  "import com.fasterxml.jackson.annotation.JsonInclude;\r\n" +
+                  "import com.fasterxml.jackson.annotation.JsonProperty;\r\n" +
+                  "import io.swagger.annotations.ApiModel;\r\n" +
+                  "import io.swagger.annotations.ApiModelProperty;\r\n" +
+                  "import lombok.Data;\r\n" +
+                  "\r\n" +
+                  "import javax.persistence.Column;\r\n" +
+                  "import javax.persistence.Id;\r\n" +
+                  "import javax.persistence.Table;\r\n" +
+                  "import java.util.Date;\r\n");
+
           //判断是否导入工具包
           if (f_util) {
                sb.append("import java.util.Date;\r\n");
