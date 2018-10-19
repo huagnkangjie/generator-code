@@ -21,7 +21,7 @@ public class ${fileName}Service {
     private final ${fileName}Mapper mapper;
 
     @Autowired
-    public ${fileName}Service(${fileName}Mappermapper) {
+    public ${fileName}Service(${fileName}Mapper mapper) {
         this.mapper = mapper;
     }
 
