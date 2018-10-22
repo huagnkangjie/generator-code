@@ -18,11 +18,11 @@ import ${mapperClassPath}.${fileName}Mapper;
 @Log4j2
 public class ${fileName}Service {
 
-    private final ${fileName}Mapper mapper;
+    private final ${fileName}Mapper ${mapper}Mapper;
 
     @Autowired
-    public ${fileName}Service(${fileName}Mapper mapper) {
-        this.mapper = mapper;
+    public ${fileName}Service(${fileName}Mapper ${mapper}Mapper) {
+        this.${mapper}Mapper = ${mapper}Mapper;
     }
 
 }

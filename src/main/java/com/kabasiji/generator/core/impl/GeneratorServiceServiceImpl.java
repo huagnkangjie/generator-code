@@ -31,7 +31,9 @@ public class GeneratorServiceServiceImpl implements GeneratorService {
                configuration.setDirectoryForTemplateLoading(new File(rootJavaPath + param.getTemplatePath()));
                // step3 创建数据模型
                Map<String, Object> dataMap = new HashMap<String, Object>();
-               dataMap.put("fileName", param.getFileName());
+               String fileName = param.getFileName();
+               dataMap.put("fileName", fileName);
+               dataMap.put("mapper", fileName.substring(0, 1).toLowerCase() + fileName.substring(1, fileName.length()));
                dataMap.put("mapperClassPath", param.getMapperClass());
                dataMap.put("serviceClassPath", param.getServiceClassPath());
                dataMap.put("modelClassPath", param.getModelPackagePath());
