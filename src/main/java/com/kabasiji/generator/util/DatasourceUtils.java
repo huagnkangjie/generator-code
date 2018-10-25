@@ -17,27 +17,44 @@ import java.util.Date;
 
 /**
  * 数据库操作工具
+ *
  * @author huang_kangjie
  * @create 2018-09-04 11:28
  **/
 public class DatasourceUtils {
 
      private Param param = null;
-     /**作者*/
+     /**
+      * 作者
+      */
      private String authorName = "Nmggy";
-     /**表名 */
+     /**
+      * 表名
+      */
      private static String tablename = "";
-     /**列名数组*/
+     /**
+      * 列名数组
+      */
      private String[] colnames;
-     /**列名类型数组*/
+     /**
+      * 列名类型数组
+      */
      private String[] colTypes;
-     /**每个字段的注释新*/
+     /**
+      * 每个字段的注释新
+      */
      private String[] remarks;
-     /**列名大小数组*/
+     /**
+      * 列名大小数组
+      */
      private int[] colSizes;
-     /**是否需要导入包java.util.**/
+     /**
+      * 是否需要导入包java.util.
+      **/
      private boolean f_util = false;
-     /**是否需要导入包java.sql.**/
+     /**
+      * 是否需要导入包java.sql.
+      **/
      private boolean f_sql = false;
 
      private static DatasourceUtils datasource = null;
@@ -59,10 +76,11 @@ public class DatasourceUtils {
 
      /**
       * 单利获取数据源工具
+      *
       * @return
       */
-     public static synchronized DatasourceUtils getInstance(){
-          if(datasource == null) {
+     public static synchronized DatasourceUtils getInstance() {
+          if (datasource == null) {
                datasource = new DatasourceUtils();
           }
           return datasource;
@@ -71,6 +89,7 @@ public class DatasourceUtils {
 
      /**
       * 生成实体
+      *
       * @param param
       */
      public void generatorModel(Param param) {
@@ -112,7 +131,7 @@ public class DatasourceUtils {
                     colSizes[i] = rsmd.getColumnDisplaySize(i + 1);
                }
 
-               String content = parse(colnames, colTypes, colSizes);
+               String content = parse(con, colnames, colTypes, colSizes);
 
                try {
                     String outputPath = param.getDestFilePath() + "/" + fileName(param.getTableName()) + ".java";
@@ -139,24 +158,25 @@ public class DatasourceUtils {
 
      /**
       * 获取表的所有注释
+      *
       * @param con
       * @param remarks
       * @return
       */
-     public String[] getReaks(Connection con, String remarks[]){
+     public String[] getReaks(Connection con, String remarks[]) {
           try {
                Statement stmt = con.createStatement();
                ResultSet rs = stmt.executeQuery(
-                        "SELECT\n" +
-                            "    TABLE_NAME,\n" +
-                            "    column_name,\n" +
-                            "    DATA_TYPE,\n" +
-                            "    column_comment\n" +
-                            "FROM \n" +
-                            "    information_schema. COLUMNS\n" +
-                            "WHERE\n" +
-                            "    TABLE_SCHEMA = '"+getDateBase(URL)+"'\n" +
-                            "and TABLE_NAME = '"+this.param.getTableName()+"' ");
+                       "SELECT\n" +
+                               "    TABLE_NAME,\n" +
+                               "    column_name,\n" +
+                               "    DATA_TYPE,\n" +
+                               "    column_comment\n" +
+                               "FROM \n" +
+                               "    information_schema. COLUMNS\n" +
+                               "WHERE\n" +
+                               "    TABLE_SCHEMA = '" + getDateBase(URL) + "'\n" +
+                               "and TABLE_NAME = '" + this.param.getTableName() + "' ");
                int i = 0;
                while (rs.next()) {
                     remarks[i] = rs.getString(4);
@@ -171,9 +191,41 @@ public class DatasourceUtils {
 
      }
 
-     public String fileName(String fileName){
+     /**
+      * 获取单个表的注释
+      * @param conn
+      * @param tableName
+      * @return
+      * @throws Exception
+      */
+     public static String getCommentByTableName(Connection conn, String tableName) throws Exception {
+          Statement stmt = (Statement) conn.createStatement();
+          ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE " + tableName);
+          String comment = "";
+          if (rs != null && rs.next()) {
+               String createDDL = rs.getString(2);
+               comment = parse(createDDL);
+          }
+          rs.close();
+          stmt.close();
+          conn.close();
+          return comment;
+     }
 
-          if(fileName.startsWith("t_") && fileName.length() > 3){
+     public static String parse(String all) {
+          String comment = null;
+          int index = all.indexOf("COMMENT='");
+          if (index < 0) {
+               return "";
+          }
+          comment = all.substring(index + 9);
+          comment = comment.substring(0, comment.length() - 1);
+          return comment;
+     }
+
+     public String fileName(String fileName) {
+
+          if (fileName.startsWith("t_") && fileName.length() > 3) {
                String[] names = fileName.split("_");
                String newName = "";
                for (String name : names) {
@@ -195,7 +247,7 @@ public class DatasourceUtils {
       * @param colSizes
       * @return
       */
-     private String parse(String[] colnames, String[] colTypes, int[] colSizes) {
+     private String parse(Connection conn, String[] colnames, String[] colTypes, int[] colSizes) {
           StringBuffer sb = new StringBuffer();
           sb.append("package " + this.param.getModelPackagePath() + ";\r\n");
 
@@ -223,16 +275,26 @@ public class DatasourceUtils {
           sb.append("/**\r\n");
           sb.append(" *\r\n");
           sb.append(" * " + this.param.getTableName() + " 实体类\r\n");
+          try {
+               String comment = getCommentByTableName(conn, this.param.getTableName());
+               if(comment != null && !comment.equals("")) {
+                    sb.append(" *\r\n");
+                    sb.append(" * " + comment + " \r\n");
+               }
+          } catch (Exception e) {
+               System.out.println(e.getMessage());
+               e.printStackTrace();
+          }
           sb.append(" *\r\n");
           sb.append(" * @author " + this.param.getAuther() + "\r\n");
           sb.append(" * @create " + this.date() + "\r\n");
           sb.append("*/\r\n");
           //实体部分
           sb.append("@Data\r\n" +
-                    "@ApiModel\r\n" +
-                    "@Table(name = \""+ this.param.getTableName() +"\")\r\n" +
-                    "@JsonInclude(JsonInclude.Include.NON_NULL)\r\n" +
-                    "@JsonIgnoreProperties(ignoreUnknown = true)\r\n");
+                  "@ApiModel\r\n" +
+                  "@Table(name = \"" + this.param.getTableName() + "\")\r\n" +
+                  "@JsonInclude(JsonInclude.Include.NON_NULL)\r\n" +
+                  "@JsonIgnoreProperties(ignoreUnknown = true)\r\n");
           sb.append("public class " + initcap(fileName(this.param.getTableName())) + " {\r\n");
           //属性
           processAllAttrs(sb);
@@ -243,7 +305,7 @@ public class DatasourceUtils {
           return sb.toString();
      }
 
-     public String date(){
+     public String date() {
           Date currentTime = new Date();
           SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
           String dateString = formatter.format(currentTime);
@@ -262,10 +324,10 @@ public class DatasourceUtils {
                String colNewName = "";
                //是否需要转换json
                boolean josnFlag = false;
-               if(colname.contains("_")) {
+               if (colname.contains("_")) {
                     String[] names = colname.split("_");
                     colNewName = names[0];
-                    for(int j = 1; j < names.length; j++){
+                    for (int j = 1; j < names.length; j++) {
                          colNewName = colNewName + initcap(names[j]);
                     }
                     josnFlag = true;
@@ -273,17 +335,17 @@ public class DatasourceUtils {
                     colNewName = colname;
                }
                sb.append("\t\r\n");
-               if(i == 0) {
+               if (i == 0) {
                     sb.append("\t@Id\r\n");
                }
                String remark = this.remarks[i];
-               if(!StringUtils.isEmpty(remark)) {
-                    sb.append("\t@ApiModelProperty(\""+ remark +"\")\r\n");
+               if (!StringUtils.isEmpty(remark)) {
+                    sb.append("\t@ApiModelProperty(\"" + remark + "\")\r\n");
                }
-               if(josnFlag){
-                    sb.append("\t@JsonProperty(value = \""+ colname +"\")\r\n");
+               if (josnFlag) {
+                    sb.append("\t@JsonProperty(value = \"" + colname + "\")\r\n");
                }
-               sb.append("\t@Column(name = \""+ colname +"\")\r\n");
+               sb.append("\t@Column(name = \"" + colname + "\")\r\n");
                sb.append("\tprivate " + sqlType2JavaType(colTypes[i]) + " " + colNewName + ";\r\n");
                sb.append("\t\r\n");
           }
@@ -317,7 +379,7 @@ public class DatasourceUtils {
       */
      public String initcap(String str) {
 
-          if(!StringUtils.isEmpty(str)) {
+          if (!StringUtils.isEmpty(str)) {
                char[] ch = str.toCharArray();
                if (ch[0] >= 'a' && ch[0] <= 'z') {
                     ch[0] = (char) (ch[0] - 32);
@@ -332,6 +394,7 @@ public class DatasourceUtils {
      /**
       * 功能：获得列的数据类型
       * 可能没有列举完全，如果发现生成的实体有null则新增该数据类型
+      *
       * @param sqlType
       * @return
       */
@@ -372,10 +435,11 @@ public class DatasourceUtils {
 
      /**
       * 获取数据库的名称
+      *
       * @param url
       * @return
       */
-     public String getDateBase(String url){
+     public String getDateBase(String url) {
           return url.substring(url.lastIndexOf("/") + 1, url.indexOf("?"));
      }
 
