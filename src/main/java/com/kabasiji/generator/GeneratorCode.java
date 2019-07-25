@@ -35,12 +35,18 @@ public class GeneratorCode {
      private static Param param = new Param();
 
      public static void main(String[] args) {
-          loadConfig();
-          loadDataSource();
-          generatorModel();
-          generatorMapper();
-          generatorService();
-          generatorController();
+          String tableNames = PropertyUtils.getValue("table.name");
+          String[] tbs = tableNames.split(",");
+          for(String tname : tbs){
+               tableName = tname;
+               loadConfig();
+               loadDataSource();
+               generatorModel();
+               //generatorMapper();
+               //generatorService();
+               //generatorController();
+          }
+
      }
 
      /**
@@ -58,7 +64,7 @@ public class GeneratorCode {
                destFile.mkdir();
           }
 
-          tableName = PropertyUtils.getValue("table.name");
+          //tableName = PropertyUtils.getValue("table.name");
           if(StringUtils.isEmpty(tableName)) {
                System.err.println("请检查配置文件table.name属性的值是否配置？");
                return;
