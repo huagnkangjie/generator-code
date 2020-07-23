@@ -10,6 +10,7 @@ import com.kabasiji.generator.core.javabean.Json2JavaElement;
 import com.kabasiji.generator.util.DailogUtil;
 import com.kabasiji.generator.util.FileUtils2;
 import com.kabasiji.generator.util.StringUtils2;
+import com.kabasiji.generator.util.TimeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * 根据json创建javabean
@@ -78,10 +80,71 @@ public class CreateJavabean4Json {
           }
           file.createNewFile();
 
+          javaBeanStr = setClassInfo(javabeanName, javaBeanStr);
+
           FileUtils2.writeString2File(javaBeanStr, file);
           //FileUtils2.writeString2File(javaBeanStr, new File(
           //        "temp" + File.separator + "Json" + File.separator + "JsonBean.java"));
      }
+
+     /**
+      * 设置类信息
+      * @param javabeanName className
+      * @param javaBeanStr javabean字符串
+      * @return 完整类信息
+      */
+     public static String setClassInfo(String javabeanName, String javaBeanStr){
+          StringBuilder sb = new StringBuilder();
+          sb.append(setPackageInfo());
+          sb.append(setAnnotaion());
+          sb.append("public class " + javabeanName + " { ");
+          sb.append(javaBeanStr);
+          sb.append("}");
+          return sb.toString();
+     }
+
+     public static String setPackageInfo(){
+          StringBuilder sb = new StringBuilder();
+          sb.append("package " + JAVABEAN_PACKAGE);
+          sb.append("\n");
+          sb.append("\n");
+          sb.append("import com.fasterxml.jackson.annotation.JsonInclude;\n");
+          sb.append("import com.fasterxml.jackson.annotation.JsonProperty;\n");
+          sb.append("import io.swagger.annotations.ApiModel;\n");
+          sb.append("import io.swagger.annotations.ApiModelProperty;\n");
+          sb.append("import lombok.Data;\n");
+          sb.append("import lombok.EqualsAndHashCode;\n");
+          sb.append("\n");
+          sb.append("/**\n");
+          sb.append(" *\n");
+          sb.append(" *\n");
+          sb.append(" * @author huang_kangjie\n");
+          sb.append(" * @date "+ getDate() +"\n");
+          sb.append(" */\n");
+          return sb.toString();
+     }
+
+     /**
+      * 设置时间
+      */
+     public static String getDate(){
+          String year = TimeUtil.getYear() + "";
+          String month = TimeUtil.getMonth() + "";
+          String day = TimeUtil.getDay() + "";
+          String time = TimeUtil.getTime().substring(11, 16);
+
+          return year + "/" + month + "/" + day + " 00" + new Random().nextInt(5)+""+ new Random().nextInt(9) + " " + time;
+     }
+
+     public static String setAnnotaion(){
+          StringBuilder sb = new StringBuilder();
+          sb.append("@Data\n");
+          sb.append("@JsonInclude(JsonInclude.Include.NON_NULL)\n");
+          sb.append("@JsonIgnoreProperties(ignoreUnknown = true)\n");
+          sb.append("@ApiModel\n");
+          return sb.toString();
+     }
+
 
      /**
       * 将json字符串转换为对应的javabean
@@ -142,6 +205,7 @@ public class CreateJavabean4Json {
 
                     // public class CustomClass {
                     sb.append("\n");
+                    sb.append(StringUtils2.formatSingleLine(1, "@Data"));
                     sb.append(StringUtils2.formatSingleLine(1, "public static class " + customClassName + " {"));
 
                     StringBuilder sbSubGetterAndSetter = new StringBuilder();
@@ -194,6 +258,9 @@ public class CreateJavabean4Json {
                sb.append(StringUtils2.formatSingleLine(1 + extraTabNum, " */"));
           }
 
+          // 申明变量 注解
+          sb.append("\n");
+          sb.append(StringUtils2.formatSingleLine(1 + extraTabNum, "@ApiModelProperty(value = \"\")"));
           // 申明变量
           // private String name;
           sb.append(StringUtils2.formatSingleLine(1 + extraTabNum,
