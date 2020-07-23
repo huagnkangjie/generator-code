@@ -1,9 +1,6 @@
 {
-	"customer_id":"user12345",
-	"age":12,
-	"name": "user12",
-	"gender": "男12",
-	"testclass":{
-		"asdf":123
-	}
-}
+    "Device": "0000015210",
+    "HighSpeed": 0,
+    "UpdateTime": "2020-07-20T20:33:43",
+    "Status": -2
+  }
