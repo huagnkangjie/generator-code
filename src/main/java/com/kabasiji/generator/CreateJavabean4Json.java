@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.kabasiji.generator.core.javabean.ArrayType;
 import com.kabasiji.generator.core.javabean.Json2JavaElement;
+import com.kabasiji.generator.util.DailogUtil;
 import com.kabasiji.generator.util.FileUtils2;
 import com.kabasiji.generator.util.StringUtils2;
 
@@ -49,6 +50,7 @@ public class CreateJavabean4Json {
 
           System.out.println("============> 执行完毕！！！");
           System.out.println("============> 文件地址： " + DEST_FILE_PATH);
+          DailogUtil.openDailog(DEST_FILE_PATH);
      }
 
      /**
