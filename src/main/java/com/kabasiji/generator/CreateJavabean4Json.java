@@ -108,6 +108,7 @@ public class CreateJavabean4Json {
           sb.append("package " + JAVABEAN_PACKAGE);
           sb.append("\n");
           sb.append("\n");
+          sb.append("import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\n");
           sb.append("import com.fasterxml.jackson.annotation.JsonInclude;\n");
           sb.append("import com.fasterxml.jackson.annotation.JsonProperty;\n");
           sb.append("import io.swagger.annotations.ApiModel;\n");
@@ -267,6 +268,7 @@ public class CreateJavabean4Json {
           sb.append(StringUtils2.formatSingleLine(1 + extraTabNum,
                   "private " + getTypeName(j2j) + " " + j2j.getName() + ";"));
 
+          /*
           // 生成变量对应的getter和setter方法
           // public String getName() {
           //     return name;
@@ -287,6 +289,7 @@ public class CreateJavabean4Json {
           sbGetterAndSetter.append(StringUtils2.formatSingleLine(2 + extraTabNum,
                   "this." + j2j.getName() + " = " + j2j.getName() + ";"));
           sbGetterAndSetter.append(StringUtils2.formatSingleLine(1 + extraTabNum, "}"));
+           */
      }
 
      /**
@@ -530,7 +533,15 @@ public class CreateJavabean4Json {
           for (int i = 0; i < j2j.getArrayDeep(); i++) {
                sb.append(">");
           }
-          return sb.toString();
+          String rs = sb.toString();
+          if(rs.equals("int")) {
+               rs = "Integer";
+          }
+          if(rs.equals("long")) {
+               rs = "Long";
+          }
+
+          return rs;
      }
 }
 
