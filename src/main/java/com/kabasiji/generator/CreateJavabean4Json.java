@@ -14,6 +14,7 @@ import com.kabasiji.generator.util.TimeUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,17 +35,24 @@ import java.util.Random;
 public class CreateJavabean4Json {
 
      private static final String DEST_FILE_PATH = "D:/generatore-code";
-     private static final String JSON_PATH = "F:\\previous\\generator-code\\src\\resources\\json.txt";
+     private static final URL JSON_PATH = CreateJavabean4Json.class.getResource("/json.txt");
 
-     private static final String JAVABEAN_PACKAGE = "com.kabasiji.modle";
+     private static final String JAVABEAN_PACKAGE = "com.asdf.base.model.vo;";
 
      public static void main(String[] args) throws IOException {
+          //先删除这个文件夹下的所有文件
+          File file = new File(DEST_FILE_PATH);
+          File[] files = file.listFiles();
+          for(File f : files) {
+               System.out.println("============> 删除文件：" + f.getName());
+               f.delete();
+          }
           System.out.println("-------------------------------");
           System.out.println("============> 正则读取Json文件");
           /// 读取json字符串
-          String json = FileUtils2.readToString(new File(JSON_PATH), "UTF-8");
+          String json = FileUtils2.readToString(new File(JSON_PATH.getPath()), "UTF-8");
           //javabean的文件名
-          String javabeanFileName = "Test";
+          String javabeanFileName = "test";
 
           System.out.println("============> Json文件读取完毕，正在生成JavaBean");
 
@@ -265,8 +273,13 @@ public class CreateJavabean4Json {
           sb.append(StringUtils2.formatSingleLine(1 + extraTabNum, "@JsonProperty(value = \""+j2j.getName()+"\")"));
           // 申明变量
           // private String name;
+          //首字母小写
+          String name = j2j.getName().substring(0,1).toLowerCase();
+          if(j2j.getName().length() > 1){
+               name = name + j2j.getName().substring(1);
+          }
           sb.append(StringUtils2.formatSingleLine(1 + extraTabNum,
-                  "private " + getTypeName(j2j) + " " + j2j.getName() + ";"));
+                  "private " + getTypeName(j2j) + " " + name + ";"));
 
           /*
           // 生成变量对应的getter和setter方法
