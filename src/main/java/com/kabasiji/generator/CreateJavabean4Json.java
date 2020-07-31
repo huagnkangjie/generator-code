@@ -9,6 +9,7 @@ import com.kabasiji.generator.core.javabean.ArrayType;
 import com.kabasiji.generator.core.javabean.Json2JavaElement;
 import com.kabasiji.generator.util.DailogUtil;
 import com.kabasiji.generator.util.FileUtils2;
+import com.kabasiji.generator.util.PropertyUtils;
 import com.kabasiji.generator.util.StringUtils2;
 import com.kabasiji.generator.util.TimeUtil;
 
@@ -34,14 +35,23 @@ import java.util.Random;
  */
 public class CreateJavabean4Json {
 
-     private static final String DEST_FILE_PATH = "D:/generatore-code";
      private static final URL JSON_PATH = CreateJavabean4Json.class.getResource("/json.txt");
 
-     private static final String JAVABEAN_PACKAGE = "com.asdf.base.model.vo;";
-
      public static void main(String[] args) throws IOException {
+          /*
+           *使用前请更改 /resources/config.properties里面属性
+           */
+
+          //javabean的文件名
+          String javabeanFileName = "AdsOpionQueryDiskVO";
+
+          create(javabeanFileName);
+     }
+
+     public static void create(String javabeanFileName) throws IOException {
+          String destFilePath = PropertyUtils.getValue("dest.file.path");
           //先删除这个文件夹下的所有文件
-          File file = new File(DEST_FILE_PATH);
+          File file = new File(destFilePath);
           File[] files = file.listFiles();
           for(File f : files) {
                System.out.println("============> 删除文件：" + f.getName());
@@ -51,16 +61,14 @@ public class CreateJavabean4Json {
           System.out.println("============> 正则读取Json文件");
           /// 读取json字符串
           String json = FileUtils2.readToString(new File(JSON_PATH.getPath()), "UTF-8");
-          //javabean的文件名
-          String javabeanFileName = "test";
 
           System.out.println("============> Json文件读取完毕，正在生成JavaBean");
 
-          parseJson2Java(json, DEST_FILE_PATH, javabeanFileName);
+          parseJson2Java(json, destFilePath, javabeanFileName);
 
           System.out.println("============> 执行完毕！！！");
-          System.out.println("============> 文件地址： " + DEST_FILE_PATH);
-          DailogUtil.openDailog(DEST_FILE_PATH);
+          System.out.println("============> 文件地址： " + destFilePath);
+          DailogUtil.openDailog(destFilePath);
      }
 
      /**
@@ -113,7 +121,7 @@ public class CreateJavabean4Json {
 
      public static String setPackageInfo(){
           StringBuilder sb = new StringBuilder();
-          sb.append("package " + JAVABEAN_PACKAGE);
+          sb.append("package " + PropertyUtils.getValue("model.package.path"));
           sb.append("\n");
           sb.append("\n");
           sb.append("import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\n");
@@ -127,7 +135,7 @@ public class CreateJavabean4Json {
           sb.append("/**\n");
           sb.append(" *\n");
           sb.append(" *\n");
-          sb.append(" * @author huang_kangjie\n");
+          sb.append(" * @author "+ PropertyUtils.getValue("auther") +"\n");
           sb.append(" * @date "+ getDate() +"\n");
           sb.append(" */\n");
           return sb.toString();
