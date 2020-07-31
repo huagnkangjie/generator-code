@@ -1,6 +1,7 @@
-{
-    "Device": "0000015210",
-    "HighSpeed": 0,
-    "UpdateTime": "2020-07-20T20:33:43",
-    "Status": -2
-  }
+[
+    {
+        "Disk": "C:",
+        "Used": 1,
+        "Percent": 90
+    }
+]

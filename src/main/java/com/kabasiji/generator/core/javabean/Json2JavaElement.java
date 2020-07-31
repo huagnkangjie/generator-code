@@ -40,12 +40,22 @@ public class Json2JavaElement {
      private Json2JavaElement parentJb;
 
      private String name;
+     /** 值 */
+     private String value;
      private Class<?> type;
 
      /**
       * 注释,null时不添加注释
       */
      private String des;
+
+     public String getValue() {
+          return value;
+     }
+
+     public void setValue(String value) {
+          this.value = value;
+     }
 
      public boolean isArray() {
           return isArray;

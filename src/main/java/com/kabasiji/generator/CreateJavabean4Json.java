@@ -277,7 +277,8 @@ public class CreateJavabean4Json {
 
           // 申明变量 注解
           sb.append("\n");
-          sb.append(StringUtils2.formatSingleLine(1 + extraTabNum, "@ApiModelProperty(value = \"\")"));
+          sb.append(StringUtils2.formatSingleLine(1 + extraTabNum,
+                  "@ApiModelProperty(value = \"\", example = \""+j2j.getValue()+"\")"));
           sb.append(StringUtils2.formatSingleLine(1 + extraTabNum, "@JsonProperty(value = \""+j2j.getName()+"\")"));
           // 申明变量
           // private String name;
@@ -365,6 +366,7 @@ public class CreateJavabean4Json {
 
                Json2JavaElement j2j = new Json2JavaElement();
                j2j.setName(name);
+               j2j.setValue(je.getAsString());
                if (parent != null) {
                     j2j.setParentJb(parent);
                }
