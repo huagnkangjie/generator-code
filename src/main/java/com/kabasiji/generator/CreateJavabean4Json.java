@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class CreateJavabean4Json {
            */
 
           //javabean的文件名
-          String javabeanFileName = "AdsOpionQueryDiskVO";
+          String javabeanFileName = "1";
 
           create(javabeanFileName);
      }
@@ -121,7 +122,7 @@ public class CreateJavabean4Json {
 
      public static String setPackageInfo(){
           StringBuilder sb = new StringBuilder();
-          sb.append("package " + PropertyUtils.getValue("model.package.path"));
+          sb.append("package " + PropertyUtils.getValue("model.package.path") + ";");
           sb.append("\n");
           sb.append("\n");
           sb.append("import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\n");
@@ -364,9 +365,11 @@ public class CreateJavabean4Json {
                String name = entry.getKey();
                JsonElement je = entry.getValue();
 
+               String value = "";
+
                Json2JavaElement j2j = new Json2JavaElement();
                j2j.setName(name);
-               j2j.setValue(je.getAsString());
+
                if (parent != null) {
                     j2j.setParentJb(parent);
                }
@@ -384,6 +387,9 @@ public class CreateJavabean4Json {
 
                     // 自定义类需要继续递归,解析自定义类中的json结构
                     recursionJson(je.getAsJsonObject(), j2j);
+
+                    value = je.getAsString();
+
                } else if (type.equals(JsonArray.class)) {
                     // 集合类型
 
@@ -403,12 +409,21 @@ public class CreateJavabean4Json {
                          j2j.setType(arrayType.getType());
                     }
                     jsonBeans.add(j2j);
+
+                    value = je.toString();
+                    value = value.replace("\"", "");
+                    //value = value.replace("\"", "\\\"");
+
                } else {
                     // 其他情况,一般都是String,int等基础数据类型
 
                     j2j.setType(type);
                     jsonBeans.add(j2j);
+                    value = je.getAsString();
                }
+
+               //设置字段的值
+               j2j.setValue(value);
           }
      }
 
