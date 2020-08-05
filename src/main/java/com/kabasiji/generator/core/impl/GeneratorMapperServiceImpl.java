@@ -18,40 +18,25 @@ import java.util.Map;
  * @author huang_kangjie
  * @create 2018-09-04 10:57
  **/
-public class GeneratorMapperServiceImpl implements GeneratorService {
+public class GeneratorMapperServiceImpl extends GeneratorService {
 
      @Override
      public void generator(Param param) {
-
-          Writer out = null;
-          try {
-               // step1 创建freeMarker配置实例
-               Configuration configuration = new Configuration();
-               // step2 获取模版路径
-               String rootJavaPath = new StringBuffer(System.getProperty("user.dir")).append("/").append(param.getSrcFolder()).append("/").toString();
-               configuration.setDirectoryForTemplateLoading(new File(rootJavaPath + param.getTemplatePath()));
-               // step3 创建数据模型
-               Map<String, Object> dataMap = new HashMap<String, Object>();
-               dataMap.put("fileName", param.getFileName());
-               dataMap.put("mapperClassPath", param.getMapperClass());
-               dataMap.put("modelClassPath", param.getModelPackagePath());
-               dataMap.put("auther", param.getAuther());
-               dataMap.put("time", StringUtils.getDate());
-               // step4 加载模版文件
-               Template template = configuration.getTemplate("template_mapper.ftl");
-               // step5 生成数据
-               File docFile = new File(param.getDestFilePath() + "\\" + param.getFileName() + "Mapper.java");
-               if(!docFile.exists()) {
-                    docFile.createNewFile();
-               }
-               out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile)));
-               // step6 输出文件
-               template.process(dataMap, out);
-
-               System.out.println("=======================mapper生成成功！============================");
-          } catch (Exception e) {
-               e.printStackTrace();
-          }
+          create(param);
      }
 
+     @Override
+     public String getFileName(Param param) {
+          return param.getFileName() + "Mapper.java";
+     }
+
+     @Override
+     public String getTemplateName() {
+          return "template_mapper.ftl";
+     }
+
+     @Override
+     public void print() {
+          System.out.println("=======================mapper生成成功！============================");
+     }
 }

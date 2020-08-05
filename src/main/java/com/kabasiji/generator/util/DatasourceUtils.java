@@ -1,6 +1,8 @@
 package com.kabasiji.generator.util;
 
 import com.kabasiji.generator.core.Param;
+import com.sun.org.apache.regexp.internal.RE;
+import freemarker.template.utility.StringUtil;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * 数据库操作工具
@@ -225,13 +228,18 @@ public class DatasourceUtils {
 
      public String fileName(String fileName) {
 
-          if (fileName.startsWith("t_") && fileName.length() > 3) {
+          if (fileName.contains("_")) {
                String[] names = fileName.split("_");
                String newName = "";
                for (String name : names) {
                     newName = newName + initcap(name);
                }
-               newName = newName.substring(1, newName.length()) + "Entity";
+               if(fileName.startsWith("t_")){
+                    newName = newName.substring(1, newName.length()) + "Entity";
+               } else {
+                    newName = newName.substring(0,1).toUpperCase() + newName.substring(1, newName.length()) + "Entity";
+               }
+
                return newName;
           }
 
@@ -251,7 +259,11 @@ public class DatasourceUtils {
           StringBuffer sb = new StringBuffer();
           sb.append("package " + this.param.getModelPackagePath() + ";\r\n");
 
-          sb.append("import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\r\n" +
+          sb.append("import com.baomidou.mybatisplus.annotation.IdType;\n" +
+                  "import com.baomidou.mybatisplus.annotation.TableField;\n" +
+                  "import com.baomidou.mybatisplus.annotation.TableId;\n" +
+                  "import com.baomidou.mybatisplus.annotation.TableName;\n" +
+                  "import com.fasterxml.jackson.annotation.JsonIgnoreProperties;\r\n" +
                   "import com.fasterxml.jackson.annotation.JsonInclude;\r\n" +
                   "import com.fasterxml.jackson.annotation.JsonProperty;\r\n" +
                   "import io.swagger.annotations.ApiModel;\r\n" +
@@ -287,12 +299,13 @@ public class DatasourceUtils {
           }
           sb.append(" *\r\n");
           sb.append(" * @author " + this.param.getAuther() + "\r\n");
-          sb.append(" * @create " + this.date() + "\r\n");
+          sb.append(" * @date " + getDate() + "\r\n");
           sb.append("*/\r\n");
           //实体部分
           sb.append("@Data\r\n" +
                   "@ApiModel\r\n" +
-                  "@Table(name = \"" + this.param.getTableName() + "\")\r\n" +
+                  "@TableName(name = \"" + this.param.getTableName() + "\")\r\n" +
+                  //"@Table(name = \"" + this.param.getTableName() + "\")\r\n" +
                   "@JsonInclude(JsonInclude.Include.NON_NULL)\r\n" +
                   "@JsonIgnoreProperties(ignoreUnknown = true)\r\n");
           sb.append("public class " + initcap(fileName(this.param.getTableName())) + " {\r\n");
@@ -303,6 +316,18 @@ public class DatasourceUtils {
           sb.append("}\r\n");
 
           return sb.toString();
+     }
+
+     /**
+      * 设置时间
+      */
+     public static String getDate(){
+          String year = TimeUtil.getYear() + "";
+          String month = TimeUtil.getMonth() + "";
+          String day = TimeUtil.getDay() + "";
+          String time = TimeUtil.getTime().substring(11, 16);
+
+          return year + "/" + month + "/" + day + " 00" + new Random().nextInt(5)+""+ new Random().nextInt(9) + " " + time;
      }
 
      public String date() {
@@ -336,20 +361,26 @@ public class DatasourceUtils {
                }
                sb.append("\t\r\n");
                if (i == 0) {
-                    sb.append("\t@Id\r\n");
+                    sb.append("\t@TableId(value=\""+colname+"\",type = IdType.AUTO)\r\n");
+                    //sb.append("\t@Id\r\n");
                }
                String remark = this.remarks[i];
-               if (!StringUtils.isEmpty(remark)) {
-                    sb.append("\t@ApiModelProperty(\"" + remark + "\")\r\n");
+               if (StringUtils.isEmpty(remark)) {
+                    sb.append("\t@ApiModelProperty(value = \"" + remark + "\", example = \"\")\r\n");
                }
                if (josnFlag) {
                     sb.append("\t@JsonProperty(value = \"" + colname + "\")\r\n");
                }
-               sb.append("\t@Column(name = \"" + colname + "\")\r\n");
-               sb.append("\tprivate " + sqlType2JavaType(colTypes[i]) + " " + colNewName + ";\r\n");
+               sb.append("\t@TableField(value = \"" + colname + "\")\r\n");
+               //sb.append("\t@Column(name = \"" + colname + "\")\r\n");
+               sb.append("\tprivate " + sqlType2JavaType(colTypes[i]) + " " + toLowerCaseFirst(colNewName) + ";\r\n");
                sb.append("\t\r\n");
           }
 
+     }
+
+     public static String toLowerCaseFirst(String str){
+          return str.substring(0, 1).toLowerCase() + str.substring(1);
      }
 
      /**

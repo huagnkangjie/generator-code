@@ -5,11 +5,11 @@ package com.kabasiji.generator.core;
  * @author huang_kangjie
  * @create 2018-09-04 10:54
  **/
-public interface GeneratorService {
+public abstract class GeneratorService extends AbstractGeneratorTemplate {
 
      /**
       * 根据模板生成代码
       * @param param
       */
-     void generator(Param param);
+     public abstract void generator(Param param);
 }

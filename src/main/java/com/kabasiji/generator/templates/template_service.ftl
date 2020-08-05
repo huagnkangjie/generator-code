@@ -8,12 +8,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import ${mapperClassPath}.${fileName}Mapper;
+import ${serviceClassPath}.${fileName}Mapper;
 
 /**
+ *
  * @author ${auther}
  * @create ${time}
- **/
+ */
 @Service
 @Log4j2
 public class ${fileName}Service {

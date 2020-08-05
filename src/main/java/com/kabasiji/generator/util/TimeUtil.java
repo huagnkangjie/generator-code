@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
@@ -19,6 +20,18 @@ import java.util.TimeZone;
  * @date 2020/3/20 0020 17:46
  */
 public class TimeUtil {
+
+     /**
+      * 设置时间
+      */
+     public static String getDate(){
+          String year = TimeUtil.getYear() + "";
+          String month = TimeUtil.getMonth() + "";
+          String day = TimeUtil.getDay() + "";
+          String time = TimeUtil.getTime().substring(11, 16);
+
+          return year + "/" + month + "/" + day + " 00" + new Random().nextInt(5)+""+ new Random().nextInt(9) + " " + time;
+     }
 
      /**
       * 获取当前时间 yyyy-MM-dd HH:mm:ss

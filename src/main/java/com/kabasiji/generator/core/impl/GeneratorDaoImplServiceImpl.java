@@ -3,6 +3,7 @@ package com.kabasiji.generator.core.impl;
 import com.kabasiji.generator.core.GeneratorService;
 import com.kabasiji.generator.core.Param;
 import com.kabasiji.generator.util.StringUtils;
+import com.kabasiji.generator.util.TimeUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author huang_kangjie
  * @create 2018-09-04 10:57
  **/
-public class GeneratorServiceServiceImpl extends GeneratorService {
+public class GeneratorDaoImplServiceImpl extends GeneratorService {
 
      @Override
      public void generator(Param param) {
@@ -27,16 +28,16 @@ public class GeneratorServiceServiceImpl extends GeneratorService {
 
      @Override
      public String getFileName(Param param) {
-          return param.getFileName() + "Service.java";
+          return param.getFileName() + "DaoImpl.java";
      }
 
      @Override
      public String getTemplateName() {
-          return "template_service.ftl";
+          return "template_dao_impl.ftl";
      }
 
      @Override
      public void print() {
-          System.out.println("=======================service生成成功！============================");
+          System.out.println("=======================dao impl 生成成功！============================");
      }
 }
