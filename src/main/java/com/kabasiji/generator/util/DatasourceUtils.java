@@ -364,10 +364,11 @@ public class DatasourceUtils {
                     sb.append("\t@TableId(value=\""+colname+"\",type = IdType.AUTO)\r\n");
                     //sb.append("\t@Id\r\n");
                }
+               //字段的注释
                String remark = this.remarks[i];
-               if (StringUtils.isEmpty(remark)) {
+               //if (StringUtils.isEmpty(remark)) {
                     sb.append("\t@ApiModelProperty(value = \"" + remark + "\", example = \"\")\r\n");
-               }
+               //}
                if (josnFlag) {
                     sb.append("\t@JsonProperty(value = \"" + colname + "\")\r\n");
                }
