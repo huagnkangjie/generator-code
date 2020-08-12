@@ -370,7 +370,7 @@ public class DatasourceUtils {
                     sb.append("\t@ApiModelProperty(value = \"" + remark + "\", example = \"\")\r\n");
                //}
                if (josnFlag) {
-                    sb.append("\t@JsonProperty(value = \"" + colname + "\")\r\n");
+                    sb.append("\t@JsonProperty(value = \"" + colNewName + "\")\r\n");
                }
                sb.append("\t@TableField(value = \"" + colname + "\")\r\n");
                //sb.append("\t@Column(name = \"" + colname + "\")\r\n");

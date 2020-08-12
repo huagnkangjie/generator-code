@@ -56,7 +56,7 @@ public class GeneratorCode {
                //generatorMapper();
                //generatorService();
                //generatorController();
-               //generatorIService();
+               generatorIService();
                generator(GeneratoerFactroy.GeneratoerType.CONCTROLLER_2);
           }
           System.out.println("============> 文件地址： " + destFilePath);
@@ -100,7 +100,7 @@ public class GeneratorCode {
                     newName = newName + DatasourceUtils.getInstance().initcap(name);
                }
                if(tableName.startsWith("t_")){
-                    newName = newName.substring(1, newName.length()) + "Entity";
+                    newName = newName.substring(1, newName.length());
                } else {
                     newName = newName.substring(0,1).toUpperCase() + newName.substring(1, newName.length());
                }
