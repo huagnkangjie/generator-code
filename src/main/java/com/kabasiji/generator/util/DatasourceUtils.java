@@ -270,9 +270,9 @@ public class DatasourceUtils {
                   "import io.swagger.annotations.ApiModelProperty;\r\n" +
                   "import lombok.Data;\r\n" +
                   "\r\n" +
-                  "import javax.persistence.Column;\r\n" +
-                  "import javax.persistence.Id;\r\n" +
-                  "import javax.persistence.Table;\r\n" +
+                  //"import javax.persistence.Column;\r\n" +
+                  //"import javax.persistence.Id;\r\n" +
+                  //"import javax.persistence.Table;\r\n" +
                   "import java.util.Date;\r\n");
 
           //判断是否导入工具包
@@ -304,7 +304,7 @@ public class DatasourceUtils {
           //实体部分
           sb.append("@Data\r\n" +
                   "@ApiModel\r\n" +
-                  "@TableName(name = \"" + this.param.getTableName() + "\")\r\n" +
+                  "@TableName(value = \"" + this.param.getTableName() + "\")\r\n" +
                   //"@Table(name = \"" + this.param.getTableName() + "\")\r\n" +
                   "@JsonInclude(JsonInclude.Include.NON_NULL)\r\n" +
                   "@JsonIgnoreProperties(ignoreUnknown = true)\r\n");
