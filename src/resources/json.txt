@@ -1,7 +1,4 @@
-[
-    {
-        "Disk": "C:",
-        "Used": 1,
-        "Percent": 90
+{
+        "skinId": 1,
+        "name": "皮肤1"
     }
-]

@@ -44,7 +44,7 @@ public class CreateJavabean4Json {
            */
 
           //javabean的文件名
-          String javabeanFileName = "AdsOptionQueryLogVO";
+          String javabeanFileName = "ShinVO";
 
           create(javabeanFileName);
      }

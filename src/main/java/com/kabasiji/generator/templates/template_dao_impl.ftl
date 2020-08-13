@@ -1,9 +1,8 @@
 package ${mapperClassPath};
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import ${modelClassPath}.${fileName}Entity;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
+import ${modelClassPath}.I${fileName}Dao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -12,10 +11,11 @@ import org.springframework.stereotype.Repository;
  */
 @Component
 public class ${fileName}DaoImpl {
+
      private final I${fileName}Dao ${lowcaseFileName}Dao;
 
      @Autowired
-     public ${fileName}Impl(I${fileName}Dao ${lowcaseFileName}Dao) {
+     public ${fileName}DaoImpl(I${fileName}Dao ${lowcaseFileName}Dao) {
           this.${lowcaseFileName}Dao = ${lowcaseFileName}Dao;
      }
 }

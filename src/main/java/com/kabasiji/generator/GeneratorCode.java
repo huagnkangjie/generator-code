@@ -58,6 +58,7 @@ public class GeneratorCode {
                //generatorController();
                generatorIService();
                generator(GeneratoerFactroy.GeneratoerType.CONCTROLLER_2);
+               generator(GeneratoerFactroy.GeneratoerType.I_SERVICE_IMPL);
           }
           System.out.println("============> 文件地址： " + destFilePath);
           DailogUtil.openDailog(destFilePath);

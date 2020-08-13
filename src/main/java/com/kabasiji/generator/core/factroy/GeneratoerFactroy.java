@@ -23,6 +23,7 @@ public class GeneratoerFactroy {
           DAO("", "", ""),
           DAO_IMPL("", "", ""),
           I_SERVICE("I%sService.java", "template_i_service.ftl", "IService"),
+          I_SERVICE_IMPL("%sServiceImpl.java", "template_i_service_impl.ftl", "ServiceImpl"),
           CONCTROLLER_2("%sController.java", "template_controllers2.ftl", "controller 2"),
           ;
 
