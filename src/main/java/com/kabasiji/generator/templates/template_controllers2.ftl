@@ -21,7 +21,7 @@ public class ${fileName}Controller {
      private final I${fileName}Service ${lowcaseFileName}Service;
 
      @Autowired
-     public ${fileName}Controller(${fileName}Service ${lowcaseFileName}Service) {
+     public ${fileName}Controller(I${fileName}Service ${lowcaseFileName}Service) {
           this.${lowcaseFileName}Service = ${lowcaseFileName}Service;
      }
 

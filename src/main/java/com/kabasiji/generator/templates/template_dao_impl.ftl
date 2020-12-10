@@ -18,4 +18,9 @@ public class ${fileName}DaoImpl {
      public ${fileName}DaoImpl(I${fileName}Dao ${lowcaseFileName}Dao) {
           this.${lowcaseFileName}Dao = ${lowcaseFileName}Dao;
      }
+
+     public I${fileName}Dao getDao(){
+          return ${lowcaseFileName}Dao;
+     }
+
 }
